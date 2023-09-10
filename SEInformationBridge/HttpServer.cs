@@ -17,7 +17,7 @@ namespace SEInformationBridge
         {
             if (!HttpListener.IsSupported)
             {
-                throw new NotSupportedException("Windows XP SP2 or Server 2003 is required to use the HttpListener class.");
+                throw new NotSupportedException("are you running this on a potato?");
             }
 
             _port = port;
@@ -27,8 +27,6 @@ namespace SEInformationBridge
         public async Task StartAsync()
         {
             _listener.Start();
-            Console.WriteLine($"Server started on port {_port}...");
-
             while (true)
             {
                 var context = await _listener.GetContextAsync();
@@ -37,8 +35,27 @@ namespace SEInformationBridge
         }
 
         private async Task ProcessRequestAsync(HttpListenerContext context)
-        {
-            string responseString = GridInfo.Serialize();
+        {          
+            var path = context.Request.Url.AbsolutePath;
+
+            string responseString;
+
+            switch (path)
+            {
+                case "/grids":
+                    responseString = GridInfo.Serialize();
+                    break;
+                case "/planets":
+                    responseString = "Not implemented yet.";
+                    break;
+                case "/factions":
+                    responseString = "Not implemented yet.";
+                    break;
+                default:
+                    responseString = "/grids \n /planets \n /factions";
+                    break;
+            }
+
             byte[] buffer = Encoding.UTF8.GetBytes(responseString);
 
             context.Response.ContentLength64 = buffer.Length;
