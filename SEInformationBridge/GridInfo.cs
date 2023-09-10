@@ -46,15 +46,17 @@ namespace SEInformationBridge
         public static string Serialize()
         {
             if(Grids.Count == 0)
-                return "No Grids/Server Offline";
+                return "Server Offline";
 
+            GetGrids();
             UpdateInfo();
 
             List<GridEntity> values = new List<GridEntity>();
             values.AddRange(Grids.Values);
 
 
-            return JsonSerializer.Serialize(values, new JsonSerializerOptions { WriteIndented = true });      
+            return JsonSerializer.Serialize(values, new JsonSerializerOptions { WriteIndented = true });
+      
         }
         
         
