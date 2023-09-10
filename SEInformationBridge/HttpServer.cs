@@ -40,20 +40,27 @@ namespace SEInformationBridge
 
             string responseString;
 
-            switch (path)
+            switch (path.ToLower())
             {
                 case "/grids":
-                    responseString = GridInfo.Serialize();
+                    responseString = PlayerGrids.Serialize();
                     break;
                 case "/planets":
-                    responseString = "Not implemented yet.";
+                    responseString = Planets.Serialize();
                     break;
                 case "/factions":
-                    responseString = "Not implemented yet.";
+                    responseString = Factions.Serialize();
+                    break;
+                case "/players":
+                    responseString = Players.Serialize();
+                    break;
+                case "/chat":
+                    responseString = ChatLog.Serialize();
                     break;
                 default:
-                    responseString = "/grids \n /planets \n /factions";
+                    responseString = "/grids\n/planets\n/factions\n/chat";
                     break;
+
             }
 
             byte[] buffer = Encoding.UTF8.GetBytes(responseString);

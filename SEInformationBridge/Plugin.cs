@@ -14,6 +14,9 @@ namespace SEInformationBridge
 {
     public class Plugin : TorchPluginBase
     {
+
+        public static ITorchBase TorchInstance;
+
         public static readonly Logger Log = LogManager.GetCurrentClassLogger();
         public static bool Setup = false;
 
@@ -21,6 +24,7 @@ namespace SEInformationBridge
         public override void Init(ITorchBase torch)
         {
             base.Init(torch);
+            TorchInstance = torch;
 
             Log.Info("Information Bridge Plugin Loaded.");
             RunServer();
@@ -41,7 +45,8 @@ namespace SEInformationBridge
 
             if(!Setup)
             {
-                GridInfo.Setup();
+                PlayerGrids.Setup();
+                ChatLog.Setup();
                 Setup = true;
             }
             

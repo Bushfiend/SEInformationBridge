@@ -19,9 +19,9 @@ using VRageMath;
 
 namespace SEInformationBridge
 {
-    public static class GridInfo
+    public static class PlayerGrids
     {
-        public static Dictionary<long, GridEntity> Grids = new Dictionary<long, GridEntity>();
+        public static Dictionary<long, GridInfo> Grids = new Dictionary<long, GridInfo>();
 
         public static void Setup()
         {
@@ -38,25 +38,24 @@ namespace SEInformationBridge
                 if (Grids.ContainsKey(grid.EntityId))
                     continue;
                 
-                Grids.Add(grid.EntityId, new GridEntity(grid));
+                Grids.Add(grid.EntityId, new GridInfo(grid));
             }
             
         }
 
         public static string Serialize()
         {
-            if(Grids.Count == 0)
-                return "Server Offline";
+            if(Plugin.TorchInstance.CurrentSession == null)
+                return "Server not running.";
 
             GetGrids();
             UpdateInfo();
 
-            List<GridEntity> values = new List<GridEntity>();
+            List<GridInfo> values = new List<GridInfo>();
             values.AddRange(Grids.Values);
 
 
             return JsonSerializer.Serialize(values, new JsonSerializerOptions { WriteIndented = true });
-      
         }
         
         
@@ -68,7 +67,7 @@ namespace SEInformationBridge
             if (Grids.ContainsKey(entity.EntityId))
                 return;
 
-            Grids.Add(entity.EntityId, new GridEntity(entity as MyCubeGrid));
+            Grids.Add(entity.EntityId, new GridInfo(entity as MyCubeGrid));
         }
 
         private static void OnEntityRemoved(IMyEntity entity)
@@ -91,7 +90,7 @@ namespace SEInformationBridge
         }
 
        
-        public class GridEntity
+        public class GridInfo
         {
             private MyCubeGrid Grid { get; set; }         
             public string Name { get; set; }
@@ -100,11 +99,9 @@ namespace SEInformationBridge
             public string FactionTag { get; set; }
             public long EntityId { get; set; }
             public int BlockCount { get; set; }
-            public float X { get; set; }
-            public float Y { get; set; }
-            public float Z { get; set; }
+            public Vector Location { get; set; }
 
-            public GridEntity(MyCubeGrid grid) 
+            public GridInfo(MyCubeGrid grid) 
             {
                 Grid = grid;
                 UpdateGridInfo();
@@ -123,8 +120,13 @@ namespace SEInformationBridge
                 {
                     var owner = MySession.Static.Players.TryGetIdentity(bigOwner);
                     BigOwnerName = owner.DisplayName;
+
                     var faction = MySession.Static.Factions.GetPlayerFaction(bigOwner);
-                    if (faction != null)
+                    if (faction == null)
+                    {
+                        FactionTag = "No Faction";
+                    }
+                    else
                     {
                         FactionTag = faction.Tag;
                     }
@@ -133,10 +135,20 @@ namespace SEInformationBridge
                 EntityId = Grid.EntityId;
                 BlockCount = Grid.BlocksCount;              
                 BlockSize = Grid.GridSizeEnum.ToString();
-                X = (float)Math.Round(Grid.PositionComp.GetPosition().X, 2);
-                Y = (float)Math.Round(Grid.PositionComp.GetPosition().Y, 2);
-                Z = (float)Math.Round(Grid.PositionComp.GetPosition().Z, 2);
+                Location = new Vector(Grid.PositionComp.GetPosition());
 
+            }
+            public class Vector
+            {
+                public float X { get; set; }
+                public float Y { get; set; }
+                public float Z { get; set; }
+                public Vector(Vector3D vec)
+                {
+                    X = (float)Math.Round(vec.X);
+                    Y = (float)Math.Round(vec.Y);
+                    Z = (float)Math.Round(vec.Z);
+                }
             }
        
 
