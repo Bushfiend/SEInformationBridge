@@ -73,9 +73,8 @@ namespace SEInformationBridge
 
                 Dictionary<ulong, string> players = new Dictionary<ulong, string>();
                 foreach (var player in bannedPlayers)
-                {
-                    var name = string.Empty;
-                    name = MySession.Static.Players.TryGetIdentityNameFromSteamId(player);
+                {             
+                    var name = MySession.Static.Players.TryGetIdentityNameFromSteamId(player);
 
                     players.Add(player, name);
                 }

@@ -101,8 +101,9 @@ namespace SEInformationBridge
             if (Plugin.TorchInstance.CurrentSession != null)
             {
                 page.AppendLine($"<li><a href=\"http://{url}/Grids\">Grids</a></li>");
-                page.AppendLine($"<li><a href=\"http://{url}/Planets\">Planets</a></li>");
+                page.AppendLine($"<li><a href=\"http://{url}/Players\">Players</a></li>");
                 page.AppendLine($"<li><a href=\"http://{url}/Factions\">Factions</a></li>");
+                page.AppendLine($"<li><a href=\"http://{url}/Planets\">Planets</a></li>");            
                 page.AppendLine($"<li><a href=\"http://{url}/Settings\">Settings</a></li>");
                 
             }
