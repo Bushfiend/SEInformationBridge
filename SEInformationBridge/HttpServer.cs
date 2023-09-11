@@ -98,10 +98,18 @@ namespace SEInformationBridge
         {
 
             StringBuilder page = new StringBuilder(part1);
-            page.AppendLine($"<li><a href=\"http://{url}/Grids\">Grids</a></li>");
-            page.AppendLine($"<li><a href=\"http://{url}/Planets\">Planets</a></li>");
-            page.AppendLine($"<li><a href=\"http://{url}/Factions\">Factions</a></li>");
-            page.AppendLine($"<li><a href=\"http://{url}/Settings\">Settings</a></li>");
+            if (Plugin.TorchInstance.CurrentSession != null)
+            {
+                page.AppendLine($"<li><a href=\"http://{url}/Grids\">Grids</a></li>");
+                page.AppendLine($"<li><a href=\"http://{url}/Planets\">Planets</a></li>");
+                page.AppendLine($"<li><a href=\"http://{url}/Factions\">Factions</a></li>");
+                page.AppendLine($"<li><a href=\"http://{url}/Settings\">Settings</a></li>");
+                
+            }
+            else
+            {
+                page.AppendLine("-Server Offline-");
+            }
             page.AppendLine(part2);
             return page.ToString();
         }
@@ -110,8 +118,9 @@ namespace SEInformationBridge
         <html lang=""en"">
         <head>
         <meta charset=""UTF-8"">
+        <meta http-equiv=""refresh"" content=""5"">
         <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-        <title>Torch Server Data</title>
+        <title>Server Data</title>
         <style>
         body {
             font-family: Arial, sans-serif;
