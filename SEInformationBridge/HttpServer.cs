@@ -96,6 +96,7 @@ namespace SEInformationBridge
 
         private string GenerateHomePage(string url)
         {
+
             StringBuilder page = new StringBuilder(part1);
             page.AppendLine($"<li><a href=\"http://{url}/Grids\">Grids</a></li>");
             page.AppendLine($"<li><a href=\"http://{url}/Planets\">Planets</a></li>");
