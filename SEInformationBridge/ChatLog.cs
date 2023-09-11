@@ -11,6 +11,8 @@ using Sandbox.ModAPI;
 using Torch;
 using VRage.Utils;
 using static SEInformationBridge.Factions;
+using System.Configuration;
+
 
 namespace SEInformationBridge
 {
@@ -27,13 +29,14 @@ namespace SEInformationBridge
            Messages.Add(new ChatMessage(steamUserId, messageText, channel, targetId));
         }
 
-        public static string Serialize()
+        public static List<ChatMessage> GetChat()
         {
             if (Plugin.TorchInstance.CurrentSession == null)
-                return "Server not running.";
+                return null;
 
-            return JsonSerializer.Serialize(Messages, new JsonSerializerOptions { WriteIndented = true });
+            return Messages;
         }
+
 
         public class ChatMessage
         {

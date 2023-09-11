@@ -1,4 +1,5 @@
 ﻿using NLog;
+using NLog.Internal;
 using ParallelTasks;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,11 @@ namespace SEInformationBridge
             base.Init(torch);
             TorchInstance = torch;
 
-            Log.Info("Information Bridge Plugin Loaded.");
+            Log.Info($"Information Bridge Plugin Loaded.");
             RunServer();
 
         }
+
 
         public static void RunServer()
         {

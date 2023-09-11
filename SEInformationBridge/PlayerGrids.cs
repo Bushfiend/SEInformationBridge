@@ -27,10 +27,22 @@ namespace SEInformationBridge
         {
             MyAPIGateway.Entities.OnEntityAdd += OnEntityAdded;
             MyAPIGateway.Entities.OnEntityRemove += OnEntityRemoved;
-            GetGrids();
+            UpdateGrids();
         }
 
-        public static void GetGrids()
+        public static List<GridInfo> GetGridList()
+        {
+            if (Plugin.TorchInstance.CurrentSession == null)
+                return null;
+
+            UpdateGrids();
+
+            var gridList = new List<GridInfo>();
+            gridList.AddRange(Grids.Values);
+            return gridList;
+        }
+
+        public static void UpdateGrids()
         {
             var grids = MyEntities.GetEntities().OfType<MyCubeGrid>().ToList();
             foreach(var grid in grids)
@@ -40,24 +52,8 @@ namespace SEInformationBridge
                 
                 Grids.Add(grid.EntityId, new GridInfo(grid));
             }
-            
-        }
-
-        public static string Serialize()
-        {
-            if(Plugin.TorchInstance.CurrentSession == null)
-                return "Server not running.";
-
-            GetGrids();
             UpdateInfo();
-
-            List<GridInfo> values = new List<GridInfo>();
-            values.AddRange(Grids.Values);
-
-
-            return JsonSerializer.Serialize(values, new JsonSerializerOptions { WriteIndented = true });
         }
-        
         
         private static void OnEntityAdded(IMyEntity entity)
         {

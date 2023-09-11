@@ -13,22 +13,24 @@ namespace SEInformationBridge
     public static class Factions
     {
 
-        public static string Serialize()
+        public static List<FactionInfo> GetFactions()
         {
             if (Plugin.TorchInstance.CurrentSession == null)
-                return "Server not running.";
+                return null;
 
-            
+
             var factionList = MySession.Static.Factions.GetAllFactions().ToList();
 
             if (factionList.Count == 0)
-                return "No factions.";
+                return null;
+
             var factionInfo = new List<FactionInfo>();
             foreach (var faction in factionList)
             {
                 factionInfo.Add(new FactionInfo(faction));
             }
-            return JsonSerializer.Serialize(factionInfo, new JsonSerializerOptions { WriteIndented = true });
+
+            return factionInfo;
         }
 
         public class FactionInfo

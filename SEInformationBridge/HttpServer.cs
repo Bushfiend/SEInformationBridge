@@ -39,26 +39,32 @@ namespace SEInformationBridge
             var path = context.Request.Url.AbsolutePath;
 
             string responseString;
+            bool displayHomePage = false;
 
             switch (path.ToLower())
             {
+
                 case "/grids":
-                    responseString = PlayerGrids.Serialize();
+                    responseString = Utilities.Serialize(PlayerGrids.GetGridList());
                     break;
                 case "/planets":
-                    responseString = Planets.Serialize();
+                    responseString = Utilities.Serialize(Planets.GetPlanets());
                     break;
                 case "/factions":
-                    responseString = Factions.Serialize();
+                    responseString = Utilities.Serialize(Factions.GetFactions());
                     break;
                 case "/players":
-                    responseString = Players.Serialize();
+                    responseString = Utilities.Serialize(Players.GetPlayers());
                     break;
                 case "/chat":
-                    responseString = ChatLog.Serialize();
+                    responseString = Utilities.Serialize(ChatLog.GetChat());
+                    break;
+                case "/settings":
+                    responseString = Utilities.Serialize(ServerInfo.GetServerSettings());
                     break;
                 default:
-                    responseString = "/grids\n/planets\n/factions\n/chat";
+                    responseString = GenerateHomePage(context.Request.UserHostName);
+                    displayHomePage = true;
                     break;
 
             }
@@ -66,7 +72,10 @@ namespace SEInformationBridge
             byte[] buffer = Encoding.UTF8.GetBytes(responseString);
 
             context.Response.ContentLength64 = buffer.Length;
-            context.Response.ContentType = "text/plain";
+            if(displayHomePage)
+                context.Response.ContentType = "text/html";
+            else
+                context.Response.ContentType = "text/plain";
 
             using (var output = context.Response.OutputStream)
             {
@@ -84,6 +93,65 @@ namespace SEInformationBridge
             var server = new HttpServer(8080);
             await server.StartAsync();
         }
+
+        private string GenerateHomePage(string url)
+        {
+            StringBuilder page = new StringBuilder(part1);
+            page.AppendLine($"<li><a href=\"http://{url}/Grids\">Grids</a></li>");
+            page.AppendLine($"<li><a href=\"http://{url}/Planets\">Planets</a></li>");
+            page.AppendLine($"<li><a href=\"http://{url}/Factions\">Factions</a></li>");
+            page.AppendLine($"<li><a href=\"http://{url}/Settings\">Settings</a></li>");
+            page.AppendLine(part2);
+            return page.ToString();
+        }
+
+        private string part1 = @"<!DOCTYPE html>
+        <html lang=""en"">
+        <head>
+        <meta charset=""UTF-8"">
+        <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+        <title>Torch Server Data</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #2C2C2C;
+            color: #EAEAEA;
+        }
+        .box {
+            max-width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #555;
+            border-radius: 10px;
+            background-color: #3C3C3C;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        </style>
+        </head>
+        <body>
+        <div class=""box"">
+        <h2>Data Request</h2>
+        <ul>";
+
+        private string part2 = @"</ul>
+        </div>
+        </body>
+        </html>";
 
     }
 }

@@ -11,10 +11,11 @@ namespace SEInformationBridge
 {
     public static class Players
     {
-        public static string Serialize()
+      
+        public static List<PlayerInfo> GetPlayers()
         {
             if (Plugin.TorchInstance.CurrentSession == null)
-                return "Server not running.";
+                return null;
 
             var players = MySession.Static.Players.GetAllIdentities();
 
@@ -24,11 +25,8 @@ namespace SEInformationBridge
             {
                 playerInfo.Add(new PlayerInfo(player));
             }
-
-          
-            return JsonSerializer.Serialize(playerInfo, new JsonSerializerOptions { WriteIndented = true });
+            return playerInfo;
         }
-
 
         public class PlayerInfo
         {

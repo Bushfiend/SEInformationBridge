@@ -14,15 +14,14 @@ namespace SEInformationBridge
 {
     public static class Planets
     {
-
-        public static string Serialize()
+        public static List<PlanetInfo> GetPlanets()
         {
             if (Plugin.TorchInstance.CurrentSession == null)
-                return "Server not running.";
+                return null;
 
             var planets = MyEntities.GetEntities().OfType<MyPlanet>().ToList();
             if (planets.Count == 0)
-                return "No planets.";
+                return null;
 
             var planetInfo = new List<PlanetInfo>();
 
@@ -31,8 +30,7 @@ namespace SEInformationBridge
                 planetInfo.Add(new PlanetInfo(planet));
             }
 
-            
-            return JsonSerializer.Serialize(planetInfo, new JsonSerializerOptions { WriteIndented = true });
+            return planetInfo;
         }
 
         public class PlanetInfo
