@@ -77,6 +77,7 @@ namespace SEInformationBridge
             }
         }
 
+
         private static void UpdateInfo()
         {
             foreach(var grid in Grids)
@@ -88,7 +89,7 @@ namespace SEInformationBridge
        
         public class GridInfo
         {
-            private MyCubeGrid Grid { get; set; }         
+            private MyCubeGrid Grid { get; }         
             public string Name { get; set; }
             public string BlockSize { get; set; }
             public string BigOwnerName { get; set; }
@@ -96,6 +97,9 @@ namespace SEInformationBridge
             public long EntityId { get; set; }
             public int BlockCount { get; set; }
             public Vector Location { get; set; }
+            public List<Vector> BlockLocations { get; set; }
+
+            
 
             public GridInfo(MyCubeGrid grid) 
             {
@@ -106,6 +110,7 @@ namespace SEInformationBridge
             public void UpdateGridInfo()
             {
                 Name = Grid.DisplayName;
+                BlockLocations = new List<Vector>();
 
                 var bigOwner = Grid.BigOwners.FirstOrDefault();
                 if (bigOwner == 0)
@@ -126,6 +131,12 @@ namespace SEInformationBridge
                     {
                         FactionTag = faction.Tag;
                     }
+                }
+
+
+                foreach (var block in Grid.CubeBlocks)
+                {
+                    BlockLocations.Add(new Vector(block.WorldPosition));
                 }
 
                 EntityId = Grid.EntityId;

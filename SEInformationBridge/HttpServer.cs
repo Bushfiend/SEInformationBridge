@@ -75,7 +75,9 @@ namespace SEInformationBridge
             if(displayHomePage)
                 context.Response.ContentType = "text/html";
             else
-                context.Response.ContentType = "text/plain";
+                context.Response.ContentType = "application/json";
+
+            context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
 
             using (var output = context.Response.OutputStream)
             {

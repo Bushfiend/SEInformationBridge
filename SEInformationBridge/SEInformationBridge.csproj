@@ -148,6 +148,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y /d  "$(TargetPath)" "C:\Torch\Plugins\SEBridge"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y /d  "$(TargetPath)" "C:\Users\bren_\Desktop\Torch2\Plugins\SEBridge"</PostBuildEvent>
   </PropertyGroup>
 </Project>
